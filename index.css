@@ -1,0 +1,23 @@
+body::-webkit-scrollbar{
+    display: none;
+}
+.ayo::-webkit-scrollbar{
+    display: none;
+}
+body {
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+model-viewer {
+    width: 100%;
+    height: 500px;
+}
+div:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s linear;
+}
+
+button:hover {
+    transform: scale(1.05);
+    transition : transform 0.2s linear;
+}

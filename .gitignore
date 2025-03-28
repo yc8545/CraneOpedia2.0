@@ -1,0 +1,17 @@
+# Ignore environment variables
+.env
+/backend/.env
+/frontend/.env
+
+# Node modules (prevents pushing dependencies)
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Logs and system files
+*.log
+*.DS_Store
+.vscode/
+.idea/
+dist/
+build/
