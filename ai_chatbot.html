@@ -154,28 +154,29 @@
         }
 
         function recommendCrane() {
-            let userWeight = parseInt(userResponses[0]);
-            let userRadius = parseInt(userResponses[1]);
-            let userWind = userResponses[2].toLowerCase();
-            let userTerrain = userResponses[3].toLowerCase();
-            let userHeight = parseInt(userResponses[4]);
+    let userWeight = parseInt(userResponses[0]);
+    let userRadius = parseInt(userResponses[1]);
+    let userWind = userResponses[2].toLowerCase();
+    let userTerrain = userResponses[3].toLowerCase();
+    let userHeight = parseInt(userResponses[4]);
 
-            let bestCrane = craneData.find(c => 
-                userWeight <= c.weight && 
-                userRadius <= c.radius && 
-                userWind === c.wind && 
-                userTerrain === c.terrain && 
-                userHeight <= c.height
-            );
+    let bestCrane = craneData.find(c => 
+        userWeight <= c.weight && 
+        userRadius <= c.radius && 
+        userHeight <= c.height &&
+        (c.wind === userWind || (c.wind === "medium" && userWind === "low") || (c.wind === "high" && userWind !== "low")) &&
+        (c.terrain === userTerrain || (userTerrain === "soft" && c.terrain === "uneven") || (userTerrain === "uneven" && c.terrain === "soft"))
+    );
 
-            appendMessage(bestCrane ? `🔹 Recommended Crane: ${bestCrane.name}` : "❌ No suitable crane found!", "bot");
+    appendMessage(bestCrane ? `🔹 Recommended Crane: ${bestCrane.name}` : "❌ No suitable crane found!", "bot");
 
-            setTimeout(() => {
-                step = 0;
-                userResponses = [];
-                appendMessage("Do you want to find another crane? (Yes/No)", "bot");
-            }, 2000);
-        }
+    setTimeout(() => {
+        step = 0;
+        userResponses = [];
+        appendMessage("Do you want to find another crane? (Yes/No)", "bot");
+    }, 2000);
+}
+
 
         function handleKeyPress(event) {
             if (event.key === "Enter") processUserInput();
