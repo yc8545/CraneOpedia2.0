@@ -3,88 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crane Selector Chatbot</title>
+    <title>Crane Chatbot</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
-        #chatbox { width: 60%; height: 400px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; margin: auto; }
-        .bot { color: blue; font-weight: bold; }
-        .user { color: green; font-weight: bold; }
-        input, button { padding: 10px; margin-top: 10px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #fddf47e8, #f7c911ef);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 10px;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.28);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(9.8px);
+            -webkit-backdrop-filter: blur(9.8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .chat-box {
+            height: 350px;
+            overflow-y: auto;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f1f1f1;
+            border: 2px solid #ddd;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-message {
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 80%;
+            font-size: 14px;
+            word-wrap: break-word;
+        }
+
+        .bot {
+            align-self: flex-start;
+            background: #007bff;
+            color: white;
+        }
+
+        .user {
+            align-self: flex-end;
+            background: #28a745;
+            color: white;
+        }
+
+        .input-container {
+            display: flex;
+            width: 100%;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            border: 2px solid #333;
+        }
+
+        button {
+            padding: 12px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-left: 5px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        @media (max-width: 480px) {
+            .chat-container {
+                width: 100%;
+                padding: 15px;
+            }
+
+            .chat-box {
+                height: 300px;
+            }
+
+            input {
+                font-size: 12px;
+            }
+
+            button {
+                padding: 10px;
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <h1>Crane Selection Chatbot</h1>
-    <div id="chatbox"></div>
-    <input type="text" id="userInput" placeholder="Type here..." disabled>
-    <button onclick="nextQuestion()" id="nextBtn">Start</button>
+    <div class="chat-container">
+        <h2 style="color: #333;">Crane Chatbot 🤖</h2>
+        <div class="chat-box" id="chat-box"></div>
+        <div class="input-container">
+            <input type="text" id="user-input" placeholder="Type your answer..." onkeypress="handleKeyPress(event)">
+            <button onclick="processUserInput()">Send</button>
+        </div>
+    </div>
 
     <script>
-        let answers = {};
-        let step = 0;
+        let chatBox = document.getElementById("chat-box");
+        let userInput = document.getElementById("user-input");
+
         let questions = [
-            "What is the load weight in tons? (e.g., 10, 50, 200)",
-            "What is the lift radius in meters? (e.g., 5, 20, 50)",
-            "Wind condition? (low, medium, high)",
-            "Terrain type? (hard, soft, uneven, water)",
-            "Lifting height in meters? (e.g., 10, 50, 100)"
+            "What is the load weight (tons)?",
+            "What is the lift radius (meters)?",
+            "What are the wind conditions? (Low, Medium, High)",
+            "What is the terrain type? (Soft, Hard, Uneven)",
+            "What is the lifting height (meters)?"
         ];
 
-        function nextQuestion() {
-            let chatbox = document.getElementById("chatbox");
-            let userInput = document.getElementById("userInput");
-            let nextBtn = document.getElementById("nextBtn");
+        let userResponses = [];
+        let step = 0;
 
-            if (step > 0) {
-                let userAnswer = userInput.value.toLowerCase();
-                answers[step - 1] = userAnswer;
-                chatbox.innerHTML += `<p class="user">You: ${userAnswer}</p>`;
-            }
+        let craneData = [
+            { name: "Mobile Crane", weight: 50, radius: 30, wind: "low", terrain: "hard", height: 40 },
+            { name: "Tower Crane", weight: 100, radius: 80, wind: "high", terrain: "hard", height: 150 },
+            { name: "Crawler Crane", weight: 200, radius: 50, wind: "medium", terrain: "uneven", height: 100 },
+            { name: "Rough Terrain Crane", weight: 60, radius: 25, wind: "low", terrain: "soft", height: 35 },
+            { name: "Truck-Mounted Crane", weight: 30, radius: 20, wind: "low", terrain: "hard", height: 25 },
+            { name: "Floating Crane", weight: 500, radius: 90, wind: "medium", terrain: "water", height: 120 },
+            { name: "Telescopic Crane", weight: 80, radius: 35, wind: "low", terrain: "hard", height: 50 },
+            { name: "All-Terrain Crane", weight: 150, radius: 40, wind: "medium", terrain: "uneven", height: 60 },
+            { name: "Gantry Crane", weight: 250, radius: 70, wind: "high", terrain: "hard", height: 200 },
+            { name: "Rail-Mounted Crane", weight: 400, radius: 60, wind: "medium", terrain: "rail", height: 180 }
+        ];
 
+        function appendMessage(text, sender) {
+            let message = document.createElement("p");
+            message.className = "chat-message " + sender;
+            message.textContent = text;
+            chatBox.appendChild(message);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function startChat() {
+            appendMessage("Hello! I am your crane assistant. 🏗️", "bot");
+            setTimeout(() => appendMessage(questions[step], "bot"), 1000);
+        }
+
+        function processUserInput() {
+            let answer = userInput.value.trim();
+            if (!answer) return;
+
+            appendMessage(answer, "user");
+            userResponses.push(answer);
+            userInput.value = "";
+
+            step++;
             if (step < questions.length) {
-                chatbox.innerHTML += `<p class="bot">Bot: ${questions[step]}</p>`;
-                userInput.value = "";
-                userInput.focus();
-                step++;
+                setTimeout(() => appendMessage(questions[step], "bot"), 1000);
             } else {
-                suggestCrane();
+                setTimeout(recommendCrane, 1000);
             }
         }
 
-        function suggestCrane() {
-            let [load, radius, wind, terrain, height] = Object.values(answers).map(a => a.toLowerCase());
+        function recommendCrane() {
+            let userWeight = parseInt(userResponses[0]);
+            let userRadius = parseInt(userResponses[1]);
+            let userWind = userResponses[2].toLowerCase();
+            let userTerrain = userResponses[3].toLowerCase();
+            let userHeight = parseInt(userResponses[4]);
 
-            let cranes = [
-                { name: "Mobile Crane", conditions: load <= 100 && radius <= 30 && wind !== "high" && terrain === "hard" && height <= 50 },
-                { name: "Crawler Crane", conditions: load > 50 && load <= 300 && radius > 10 && radius <= 50 && wind !== "low" && (terrain === "soft" || terrain === "uneven") && height <= 100 },
-                { name: "Tower Crane", conditions: load <= 20 && radius > 50 && wind === "low" && terrain === "hard" && height > 50 },
-                { name: "Rough Terrain Crane", conditions: load <= 80 && radius <= 20 && wind !== "low" && terrain === "uneven" && height <= 40 },
-                { name: "All-Terrain Crane", conditions: load > 50 && radius > 10 && radius <= 60 && wind !== "low" && (terrain === "hard" || terrain === "soft" || terrain === "uneven") && height > 30 },
-                { name: "Floating Crane", conditions: load > 100 && radius > 20 && wind !== "low" && terrain === "water" && height > 30 },
-                { name: "Telescopic Crane", conditions: load <= 200 && radius <= 50 && wind !== "high" && (terrain === "hard" || terrain === "uneven") && height <= 80 },
-                { name: "Truck-Mounted Crane", conditions: load <= 90 && radius <= 30 && wind !== "high" && (terrain === "hard" || terrain === "soft") && height <= 50 },
-                { name: "Gantry Crane", conditions: load > 50 && radius <= 50 && wind === "low" && terrain === "hard" && height <= 70 },
-                { name: "Overhead Crane", conditions: load > 50 && radius <= 30 && wind === "low" && terrain === "hard" && height <= 50 }
-            ];
+            let bestCrane = craneData.find(c => 
+                userWeight <= c.weight && 
+                userRadius <= c.radius && 
+                userWind === c.wind && 
+                userTerrain === c.terrain && 
+                userHeight <= c.height
+            );
 
-            let selectedCrane = cranes.find(crane => crane.conditions);
-            let chatbox = document.getElementById("chatbox");
-
-            if (selectedCrane) {
-                chatbox.innerHTML += `<p class="bot">Bot: Based on your inputs, the best crane for you is: <strong>${selectedCrane.name}</strong></p>`;
-            } else {
-                chatbox.innerHTML += `<p class="bot">Bot: No suitable crane found based on your inputs. Try adjusting your requirements.</p>`;
-            }
-
-            document.getElementById("userInput").disabled = true;
-            document.getElementById("nextBtn").disabled = true;
+            appendMessage(bestCrane ? `🔹 Recommended Crane: ${bestCrane.name}` : "❌ No suitable crane found!", "bot");
         }
 
-        document.getElementById("userInput").addEventListener("keypress", function (e) {
-            if (e.key === "Enter") {
-                nextQuestion();
-            }
-        });
+        function handleKeyPress(event) {
+            if (event.key === "Enter") processUserInput();
+        }
+
+        startChat();
     </script>
 
 </body>
