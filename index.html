@@ -34,122 +34,131 @@
     </section>
 
     <!-- Crane Comparison -->
-    
+    <div class="container mx-auto p-6">
+        <h2 class="text-3xl font-bold text-center text-yellow-600">🔍 Compare Cranes</h2>
 
-    <!-- Header -->
-    <header class="bg-yellow-500 text-white text-center py-4 text-xl font-bold">
-        Crane Comparison Dashboard
-    </header>
-
-    <!-- Container -->
-    <div class="max-w-5xl mx-auto mt-10 bg-white p-6 rounded-lg shadow-lg">
-
-        <!-- Title -->
-        <h2 class="text-2xl font-semibold text-gray-800 text-center mb-6">🔍 Compare Cranes</h2>
-
-        <!-- Filters -->
-        <div class="flex justify-center space-x-4 mb-6">
-            <select id="craneType" class="border border-gray-300 rounded px-4 py-2">
-                <option value="">Select Type</option>
-                <option value="Mobile Crane">Mobile Crane</option>
-                <option value="Tower Crane">Tower Crane</option>
-                <option value="Crawler Crane">Crawler Crane</option>
-            </select>
-
-            <select id="craneModel" class="border border-gray-300 rounded px-4 py-2" multiple>
-                <!-- Models will be added dynamically -->
-            </select>
-
-            <button onclick="compareCrane()" class="bg-yellow-500 text-white px-6 py-2 rounded hover:bg-yellow-600">
-                Compare
-            </button>
+        <!-- Crane Selection Section -->
+        <div id="crane-selection" class="mt-6">
+            <div class="flex items-center space-x-4">
+                <select class="crane-type border p-2 rounded" onchange="populateModels(this)">
+                    <option value="">Select Type</option>
+                    <option value="mobile">Mobile Crane</option>
+                    <option value="tower">Tower Crane</option>
+                    <option value="crawler">Crawler Crane</option>
+                    <option value="rough">Rough Terrain Crane</option>
+                </select>
+                <select class="crane-model border p-2 rounded">
+                    <option value="">Select Model</option>
+                </select>
+                <button onclick="addCrane()" class="bg-yellow-500 text-white px-4 py-2 rounded">+</button>
+            </div>
         </div>
+
+        <!-- Compare Button -->
+        <button onclick="compareCranes()" class="mt-4 bg-blue-600 text-white px-6 py-2 rounded">Compare</button>
 
         <!-- Comparison Table -->
-        <div id="comparisonTableContainer" class="hidden">
-            <table class="w-full border-collapse border border-gray-300">
-                <thead>
-                    <tr class="bg-yellow-500 text-white">
-                        <th class="border border-gray-300 p-2">Attribute</th>
-                        <th id="modelHeaders" class="border border-gray-300 p-2">Models</th>
+        <div id="comparison-table" class="mt-6 hidden">
+            <table class="w-full border-collapse border border-gray-300 bg-white">
+                <thead class="bg-yellow-500 text-white">
+                    <tr>
+                        <th class="border px-4 py-2">Feature</th>
+                        <th class="border px-4 py-2" id="model1"></th>
+                        <th class="border px-4 py-2" id="model2"></th>
+                        <th class="border px-4 py-2" id="model3"></th>
                     </tr>
                 </thead>
-                <tbody id="comparisonTableBody">
-                    <!-- Dynamic Data Will Be Inserted Here -->
-                </tbody>
+                <tbody id="table-body"></tbody>
             </table>
         </div>
-
     </div>
 
     <script>
         const craneData = {
-            "Mobile Crane": {
-                "Model A": { capacity: "50 tons", radius: "30m", height: "40m", terrain: "Hard" },
-                "Model B": { capacity: "60 tons", radius: "35m", height: "45m", terrain: "Soft" }
-            },
-            "Tower Crane": {
-                "Model X": { capacity: "100 tons", radius: "80m", height: "150m", terrain: "Hard" },
-                "Model Y": { capacity: "120 tons", radius: "85m", height: "160m", terrain: "Soft" }
-            },
-            "Crawler Crane": {
-                "Model M": { capacity: "200 tons", radius: "50m", height: "100m", terrain: "Uneven" },
-                "Model N": { capacity: "220 tons", radius: "55m", height: "110m", terrain: "Rough" }
-            }
+            mobile: [
+                { name: "Liebherr LTM 1120", weight: "120 tons", height: "66m", radius: "50m" },
+                { name: "Terex AC 100-4L", weight: "100 tons", height: "60m", radius: "40m" },
+                { name: "Grove GMK5150L", weight: "150 tons", height: "74m", radius: "55m" }
+            ],
+            tower: [
+                { name: "Liebherr 550 EC-H", weight: "550 tons", height: "81m", radius: "85m" },
+                { name: "Potain MDT 368", weight: "320 tons", height: "75m", radius: "80m" },
+                { name: "Comansa 21LC750", weight: "750 tons", height: "100m", radius: "90m" }
+            ],
+            crawler: [
+                { name: "Kobelco CK1600G", weight: "160 tons", height: "95m", radius: "60m" },
+                { name: "Hitachi CX5500", weight: "500 tons", height: "120m", radius: "80m" },
+                { name: "Demag CC 2800", weight: "600 tons", height: "150m", radius: "100m" }
+            ],
+            rough: [
+                { name: "Tadano GR-1000XL", weight: "100 tons", height: "45m", radius: "30m" },
+                { name: "Kato SR-700LX", weight: "70 tons", height: "40m", radius: "25m" },
+                { name: "XCMG RT100", weight: "110 tons", height: "50m", radius: "35m" }
+            ]
         };
 
-        document.getElementById("craneType").addEventListener("change", function () {
-            let type = this.value;
-            let modelSelect = document.getElementById("craneModel");
-            modelSelect.innerHTML = ''; // Clear previous options
+        let selectedCranes = [];
 
-            if (type && craneData[type]) {
-                Object.keys(craneData[type]).forEach(model => {
+        function populateModels(selectElement) {
+            const craneType = selectElement.value;
+            const modelSelect = selectElement.nextElementSibling;
+            modelSelect.innerHTML = `<option value="">Select Model</option>`;
+
+            if (craneType && craneData[craneType]) {
+                craneData[craneType].forEach(model => {
                     let option = document.createElement("option");
-                    option.value = model;
-                    option.textContent = model;
+                    option.value = model.name;
+                    option.textContent = model.name;
                     modelSelect.appendChild(option);
                 });
             }
-        });
+        }
 
-        function compareCrane() {
-            let type = document.getElementById("craneType").value;
-            let modelSelect = document.getElementById("craneModel");
-            let selectedModels = Array.from(modelSelect.selectedOptions).map(opt => opt.value);
-            let tableContainer = document.getElementById("comparisonTableContainer");
-            let tableBody = document.getElementById("comparisonTableBody");
-            let modelHeaders = document.getElementById("modelHeaders");
+        function addCrane() {
+            const typeSelect = document.querySelector(".crane-type");
+            const modelSelect = document.querySelector(".crane-model");
+            const craneType = typeSelect.value;
+            const craneModel = modelSelect.value;
 
-            if (!type || selectedModels.length === 0) {
-                alert("Please select a crane type and at least one model.");
+            if (!craneType || !craneModel) {
+                alert("Please select both crane type and model.");
                 return;
             }
 
-            // Clear Previous Data
-            tableBody.innerHTML = "";
-            modelHeaders.innerHTML = selectedModels.map(model => `<th class="border border-gray-300 p-2">${model}</th>`).join("");
+            if (selectedCranes.length >= 3) {
+                alert("You can only compare up to 3 cranes.");
+                return;
+            }
 
-            // Attributes to compare
-            let attributes = ["capacity", "radius", "height", "terrain"];
+            selectedCranes.push(craneData[craneType].find(crane => crane.name === craneModel));
+
+            typeSelect.value = "";
+            modelSelect.innerHTML = `<option value="">Select Model</option>`;
+        }
+
+        function compareCranes() {
+            if (selectedCranes.length < 2) {
+                alert("Please add at least 2 cranes for comparison.");
+                return;
+            }
+
+            document.getElementById("comparison-table").classList.remove("hidden");
             
-            attributes.forEach(attribute => {
-                let row = `<tr class="bg-gray-100">
-                    <td class="border border-gray-300 p-2 font-semibold capitalize">${attribute}</td>`;
-                
-                selectedModels.forEach(model => {
-                    let value = craneData[type][model] ? craneData[type][model][attribute] : "N/A";
-                    row += `<td class="border border-gray-300 p-2">${value}</td>`;
-                });
-
-                row += `</tr>`;
-                tableBody.innerHTML += row;
+            let modelHeaders = document.querySelectorAll("#comparison-table th");
+            selectedCranes.forEach((crane, index) => {
+                modelHeaders[index + 1].textContent = crane.name;
             });
 
-            tableContainer.classList.remove("hidden");
+            let tableBody = document.getElementById("table-body");
+            tableBody.innerHTML = `
+                <tr><td class="border px-4 py-2">Weight Capacity</td>${selectedCranes.map(c => `<td class="border px-4 py-2">${c.weight}</td>`).join('')}</tr>
+                <tr><td class="border px-4 py-2">Max Height</td>${selectedCranes.map(c => `<td class="border px-4 py-2">${c.height}</td>`).join('')}</tr>
+                <tr><td class="border px-4 py-2">Max Radius</td>${selectedCranes.map(c => `<td class="border px-4 py-2">${c.radius}</td>`).join('')}</tr>
+            `;
+
+            selectedCranes = [];
         }
     </script>
-
 
 
 
