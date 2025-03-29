@@ -39,7 +39,7 @@
 
         <!-- Crane Selection Section -->
         <div id="crane-selection" class="mt-6">
-            <div class="flex items-center space-x-4">
+            <div class="crane-row flex items-center space-x-4">
                 <select class="crane-type border p-2 rounded" onchange="populateModels(this)">
                     <option value="">Select Type</option>
                     <option value="mobile">Mobile Crane</option>
@@ -50,7 +50,7 @@
                 <select class="crane-model border p-2 rounded">
                     <option value="">Select Model</option>
                 </select>
-                <button onclick="addCrane()" class="bg-yellow-500 text-white px-4 py-2 rounded">+</button>
+                <button onclick="addCraneRow()" class="bg-yellow-500 text-white px-4 py-2 rounded">+</button>
             </div>
         </div>
 
@@ -114,29 +114,46 @@
             }
         }
 
-        function addCrane() {
-            const typeSelect = document.querySelector(".crane-type");
-            const modelSelect = document.querySelector(".crane-model");
-            const craneType = typeSelect.value;
-            const craneModel = modelSelect.value;
-
-            if (!craneType || !craneModel) {
-                alert("Please select both crane type and model.");
+        function addCraneRow() {
+            const selectionDiv = document.getElementById("crane-selection");
+            
+            if (selectionDiv.children.length >= 4) {
+                alert("You can compare up to 3 cranes at a time.");
                 return;
             }
 
-            if (selectedCranes.length >= 3) {
-                alert("You can only compare up to 3 cranes.");
-                return;
-            }
+            const newRow = document.createElement("div");
+            newRow.classList.add("crane-row", "flex", "items-center", "space-x-4", "mt-2");
 
-            selectedCranes.push(craneData[craneType].find(crane => crane.name === craneModel));
+            newRow.innerHTML = `
+                <select class="crane-type border p-2 rounded" onchange="populateModels(this)">
+                    <option value="">Select Type</option>
+                    <option value="mobile">Mobile Crane</option>
+                    <option value="tower">Tower Crane</option>
+                    <option value="crawler">Crawler Crane</option>
+                    <option value="rough">Rough Terrain Crane</option>
+                </select>
+                <select class="crane-model border p-2 rounded">
+                    <option value="">Select Model</option>
+                </select>
+            `;
 
-            typeSelect.value = "";
-            modelSelect.innerHTML = `<option value="">Select Model</option>`;
+            selectionDiv.appendChild(newRow);
         }
 
         function compareCranes() {
+            selectedCranes = [];
+            const rows = document.querySelectorAll(".crane-row");
+
+            rows.forEach(row => {
+                const craneType = row.querySelector(".crane-type").value;
+                const craneModel = row.querySelector(".crane-model").value;
+                
+                if (craneType && craneModel) {
+                    selectedCranes.push(craneData[craneType].find(crane => crane.name === craneModel));
+                }
+            });
+
             if (selectedCranes.length < 2) {
                 alert("Please add at least 2 cranes for comparison.");
                 return;
@@ -155,11 +172,8 @@
                 <tr><td class="border px-4 py-2">Max Height</td>${selectedCranes.map(c => `<td class="border px-4 py-2">${c.height}</td>`).join('')}</tr>
                 <tr><td class="border px-4 py-2">Max Radius</td>${selectedCranes.map(c => `<td class="border px-4 py-2">${c.radius}</td>`).join('')}</tr>
             `;
-
-            selectedCranes = [];
         }
     </script>
-
 
 
 
