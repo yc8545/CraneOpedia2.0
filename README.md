@@ -16,12 +16,10 @@ Bridging **Technology & Heavy Lifting** for a **Smarter, Safer, and More Efficie
 ---
 
 ## 📸 Preview  
-
-🎥 **🚀 Experience Cranes in AR!** *(Click below to access the AR model)*  
-👉 **[View AR Model](https://p.plugxr.com/bvECwvd)**  
+ 
 
 🤖 **🧠 AI Chatbot in Action!** *(Chat with our AI assistant and get real-time expert insights!)*  
-👉 **[Try the AI Chatbot](https://crane-o-pedia.vercel.app/ai_chatbot.html)**  
+👉 **[Try the AI Chatbot](https://crane0pedia.vercel.app/ai_chatbot.html)**  
 
 ---
 
@@ -54,8 +52,8 @@ Bridging **Technology & Heavy Lifting** for a **Smarter, Safer, and More Efficie
 
 ## 📂 Project Documentation  
 
-## 📑 Cranopedia Presentation
-[Download Cranopedia Presentation]([https://your-ppt-link.com](https://www.canva.com/design/DAGjBXQIed4/viBd6LN3k5dp8rwsUB8dfg/edit?utm_content=DAGjBXQIed4&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton))
+### 📑 Cranopedia Presentation
+[Download Cranopedia Presentation](https://www.canva.com/design/DAGjBXQIed4/viBd6LN3k5dp8rwsUB8dfg/edit?utm_content=DAGjBXQIed4&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 ## 🎥 AR Demo Video
 [Watch the Demo Video](https://drive.google.com/file/d/1aqbBD3mbw6FbDqg85ZmzBWH46LRkEBQC/view?usp=sharing)
