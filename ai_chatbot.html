@@ -112,16 +112,16 @@
         let step = 0;
 
         let craneData = [
-            { name: "Mobile Crane", weight: 50, radius: 30, wind: "low", terrain: "hard", height: 40 },
-            { name: "Tower Crane", weight: 100, radius: 80, wind: "high", terrain: "hard", height: 150 },
-            { name: "Crawler Crane", weight: 200, radius: 50, wind: "medium", terrain: "uneven", height: 100 },
-            { name: "Rough Terrain Crane", weight: 60, radius: 25, wind: "low", terrain: "soft", height: 35 },
-            { name: "Truck-Mounted Crane", weight: 30, radius: 20, wind: "low", terrain: "hard", height: 25 },
-            { name: "Floating Crane", weight: 500, radius: 90, wind: "medium", terrain: "water", height: 120 },
-            { name: "Telescopic Crane", weight: 80, radius: 35, wind: "low", terrain: "hard", height: 50 },
-            { name: "All-Terrain Crane", weight: 150, radius: 40, wind: "medium", terrain: "uneven", height: 60 },
-            { name: "Gantry Crane", weight: 250, radius: 70, wind: "high", terrain: "hard", height: 200 },
-            { name: "Rail-Mounted Crane", weight: 400, radius: 60, wind: "medium", terrain: "rail", height: 180 }
+                { name: "Mobile Crane", conditions: load <= 100 && radius <= 30 && wind !== "high" && terrain === "hard" && height <= 50 },
+                { name: "Crawler Crane", conditions: load > 50 && load <= 300 && radius > 10 && radius <= 50 && wind !== "low" && (terrain === "soft" || terrain === "uneven") && height <= 100 },
+                { name: "Tower Crane", conditions: load <= 20 && radius > 50 && wind === "low" && terrain === "hard" && height > 50 },
+                { name: "Rough Terrain Crane", conditions: load <= 80 && radius <= 20 && wind !== "low" && terrain === "uneven" && height <= 40 },
+                { name: "All-Terrain Crane", conditions: load > 50 && radius > 10 && radius <= 60 && wind !== "low" && (terrain === "hard" || terrain === "soft" || terrain === "uneven") && height > 30 },
+                { name: "Floating Crane", conditions: load > 100 && radius > 20 && wind !== "low" && terrain === "water" && height > 30 },
+                { name: "Telescopic Crane", conditions: load <= 200 && radius <= 50 && wind !== "high" && (terrain === "hard" || terrain === "uneven") && height <= 80 },
+                { name: "Truck-Mounted Crane", conditions: load <= 90 && radius <= 30 && wind !== "high" && (terrain === "hard" || terrain === "soft") && height <= 50 },
+                { name: "Gantry Crane", conditions: load > 50 && radius <= 50 && wind === "low" && terrain === "hard" && height <= 70 },
+                { name: "Overhead Crane", conditions: load > 50 && radius <= 30 && wind === "low" && terrain === "hard" && height <= 50 }
         ];
 
         function appendMessage(text, sender) {
