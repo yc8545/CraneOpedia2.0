@@ -34,6 +34,7 @@
     </section>
 
     <!-- Crane Comparison -->
+   
     <div class="container mx-auto p-6">
         <h2 class="text-3xl font-bold text-center text-yellow-600">🔍 Compare Cranes</h2>
 
@@ -54,8 +55,11 @@
             </div>
         </div>
 
-        <!-- Compare Button -->
-        <button onclick="compareCranes()" class="mt-4 bg-blue-600 text-white px-6 py-2 rounded">Compare</button>
+        <!-- Buttons -->
+        <div class="mt-4 flex space-x-4">
+            <button onclick="compareCranes()" class="bg-blue-600 text-white px-6 py-2 rounded">Compare</button>
+            <button onclick="clearSelection()" class="bg-red-500 text-white px-6 py-2 rounded">Clear</button>
+        </div>
 
         <!-- Comparison Table -->
         <div id="comparison-table" class="mt-6 hidden">
@@ -172,6 +176,25 @@
                 <tr><td class="border px-4 py-2">Max Height</td>${selectedCranes.map(c => `<td class="border px-4 py-2">${c.height}</td>`).join('')}</tr>
                 <tr><td class="border px-4 py-2">Max Radius</td>${selectedCranes.map(c => `<td class="border px-4 py-2">${c.radius}</td>`).join('')}</tr>
             `;
+        }
+
+        function clearSelection() {
+            document.getElementById("crane-selection").innerHTML = `
+                <div class="crane-row flex items-center space-x-4">
+                    <select class="crane-type border p-2 rounded" onchange="populateModels(this)">
+                        <option value="">Select Type</option>
+                        <option value="mobile">Mobile Crane</option>
+                        <option value="tower">Tower Crane</option>
+                        <option value="crawler">Crawler Crane</option>
+                        <option value="rough">Rough Terrain Crane</option>
+                    </select>
+                    <select class="crane-model border p-2 rounded">
+                        <option value="">Select Model</option>
+                    </select>
+                    <button onclick="addCraneRow()" class="bg-yellow-500 text-white px-4 py-2 rounded">+</button>
+                </div>
+            `;
+            document.getElementById("comparison-table").classList.add("hidden");
         }
     </script>
 
