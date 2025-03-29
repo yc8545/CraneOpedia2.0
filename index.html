@@ -221,29 +221,55 @@
   
 
      <!-- AR Experience Section -->
-     <section class="text-center py-20">
-        <h1 class="text-3xl font-bold">Craneopedia AR Experience</h1>
-        <p class="text-lg mt-2">Click the button to view the crane model in AR.</p>
+   
+    <div class="container mx-auto p-6 text-center">
+        <h1 class="text-3xl font-bold text-yellow-600">🚀 Craneopedia AR Experience</h1>
+        <p class="text-lg mt-2 text-gray-700">Click a button below to view the crane model in AR.</p>
 
-        <!-- Model Viewer (Initially Hidden) -->
-        <model-viewer 
-            id="craneViewer"
-            src="/tower_crane.glb" 
-            ar 
-            ar-modes="scene-viewer quick-look"
-            camera-controls 
-            style="display: none;">
-        </model-viewer>
+        <!-- Crane List -->
+        <div class="mt-6 space-y-4">
+            <!-- Crane 1 -->
+            <div class="bg-white p-4 rounded shadow flex justify-between items-center">
+                <span class="text-lg font-bold">🏗️ Tower Crane</span>
+                <button onclick="viewInAR('tower_crane.glb', 'towerViewer')" class="bg-yellow-500 text-white px-6 py-2 rounded-lg font-bold hover:bg-yellow-400 transition">
+                    View in AR
+                </button>
+            </div>
+            <model-viewer id="towerViewer" src="/tower_crane.glb" ar ar-modes="scene-viewer quick-look" camera-controls style="display: none;"></model-viewer>
 
-        <!-- View in AR Button -->
-        <button onclick="viewInAR()" class="mt-4 bg-yellow-500 text-white px-6 py-2 rounded-lg font-bold hover:bg-yellow-400 transition">
-            View in AR
-        </button>
-    </section>
+            <!-- Crane 2 -->
+            <div class="bg-white p-4 rounded shadow flex justify-between items-center">
+                <span class="text-lg font-bold">🚛 Mobile Crane</span>
+                <button onclick="viewInAR('mobile_crane.glb', 'mobileViewer')" class="bg-yellow-500 text-white px-6 py-2 rounded-lg font-bold hover:bg-yellow-400 transition">
+                    View in AR
+                </button>
+            </div>
+            <model-viewer id="mobileViewer" src="/mobile_crane.glb" ar ar-modes="scene-viewer quick-look" camera-controls style="display: none;"></model-viewer>
+
+            <!-- Crane 3 -->
+            <div class="bg-white p-4 rounded shadow flex justify-between items-center">
+                <span class="text-lg font-bold">🛠️ Crawler Crane</span>
+                <button onclick="viewInAR('crawler_crane.glb', 'crawlerViewer')" class="bg-yellow-500 text-white px-6 py-2 rounded-lg font-bold hover:bg-yellow-400 transition">
+                    View in AR
+                </button>
+            </div>
+            <model-viewer id="crawlerViewer" src="/crawler_crane.glb" ar ar-modes="scene-viewer quick-look" camera-controls style="display: none;"></model-viewer>
+
+            <!-- Crane 4 -->
+            <div class="bg-white p-4 rounded shadow flex justify-between items-center">
+                <span class="text-lg font-bold">🌍 Rough Terrain Crane</span>
+                <button onclick="viewInAR('rough_terrain_crane.glb', 'roughViewer')" class="bg-yellow-500 text-white px-6 py-2 rounded-lg font-bold hover:bg-yellow-400 transition">
+                    View in AR
+                </button>
+            </div>
+            <model-viewer id="roughViewer" src="/rough_terrain_crane.glb" ar ar-modes="scene-viewer quick-look" camera-controls style="display: none;"></model-viewer>
+        </div>
+    </div>
 
     <script>
-        function viewInAR() {
-            let modelViewer = document.getElementById("craneViewer");
+        function viewInAR(modelSrc, viewerId) {
+            let modelViewer = document.getElementById(viewerId);
+            modelViewer.src = modelSrc; // Set the correct model source
             modelViewer.style.display = "block"; // Show the model viewer
 
             // Ensure AR mode is triggered when supported
@@ -254,6 +280,10 @@
             }
         }
     </script>
+
+    <script type="module" src="https://unpkg.com/@google/model-viewer"></script>
+
+
     
 
 
