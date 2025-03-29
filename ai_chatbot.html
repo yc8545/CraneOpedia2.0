@@ -5,12 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crane Chatbot</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Arial', sans-serif;
             text-align: center;
@@ -53,25 +48,13 @@
             max-width: 80%;
             font-size: 14px;
             word-wrap: break-word;
+            margin-bottom: 10px;
         }
 
-        .bot {
-            align-self: flex-start;
-            background: #007bff;
-            color: white;
-        }
+        .bot { align-self: flex-start; background: #007bff; color: white; }
+        .user { align-self: flex-end; background: #28a745; color: white; }
 
-        .user {
-            align-self: flex-end;
-            background: #28a745;
-            color: white;
-        }
-
-        .input-container {
-            display: flex;
-            width: 100%;
-        }
-
+        .input-container { display: flex; width: 100%; }
         input {
             flex: 1;
             padding: 12px;
@@ -92,28 +75,13 @@
             margin-left: 5px;
         }
 
-        button:hover {
-            background: #0056b3;
-        }
+        button:hover { background: #0056b3; }
 
         @media (max-width: 480px) {
-            .chat-container {
-                width: 100%;
-                padding: 15px;
-            }
-
-            .chat-box {
-                height: 300px;
-            }
-
-            input {
-                font-size: 12px;
-            }
-
-            button {
-                padding: 10px;
-                font-size: 12px;
-            }
+            .chat-container { width: 100%; padding: 15px; }
+            .chat-box { height: 300px; }
+            input { font-size: 12px; }
+            button { padding: 10px; font-size: 12px; }
         }
     </style>
 </head>
@@ -135,8 +103,8 @@
         let questions = [
             "What is the load weight (tons)?",
             "What is the lift radius (meters)?",
-            "What are the wind conditions? (Low, Medium, High)",
-            "What is the terrain type? (Soft, Hard, Uneven)",
+            "What are the wind conditions? (Low, Medium, High)?",
+            "What is the terrain type? (Soft, Hard, Uneven)?",
             "What is the lifting height (meters)?"
         ];
 
@@ -201,6 +169,12 @@
             );
 
             appendMessage(bestCrane ? `🔹 Recommended Crane: ${bestCrane.name}` : "❌ No suitable crane found!", "bot");
+
+            setTimeout(() => {
+                step = 0;
+                userResponses = [];
+                appendMessage("Do you want to find another crane? (Yes/No)", "bot");
+            }, 2000);
         }
 
         function handleKeyPress(event) {
