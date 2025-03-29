@@ -137,23 +137,37 @@
             setTimeout(() => appendMessage(questions[step], "bot"), 1000);
         }
 
-        function processUserInput() {
-            let answer = userInput.value.trim();
-            if (!answer) return;
+       function processUserInput() {
+    let answer = userInput.value.trim().toLowerCase();
+    if (!answer) return;
 
-            appendMessage(answer, "user");
-            userResponses.push(answer);
-            userInput.value = "";
+    appendMessage(answer, "user");
+    userInput.value = "";
 
-            step++;
-            if (step < questions.length) {
-                setTimeout(() => appendMessage(questions[step], "bot"), 1000);
-            } else {
-                setTimeout(recommendCrane, 1000);
-            }
+    if (step === -1) {
+        if (answer === "yes") {
+            // Reset everything and restart the chat
+            userResponses = [];
+            step = 0;
+            setTimeout(() => appendMessage(questions[step], "bot"), 1000);
+        } else {
+            appendMessage("Okay! Let me know if you need me. 🤖", "bot");
         }
+        return;
+    }
 
-        function recommendCrane() {
+    userResponses.push(answer);
+    step++;
+
+    if (step < questions.length) {
+        setTimeout(() => appendMessage(questions[step], "bot"), 1000);
+    } else {
+        setTimeout(recommendCrane, 1000);
+    }
+}
+
+
+       function recommendCrane() {
     let userWeight = parseInt(userResponses[0]);
     let userRadius = parseInt(userResponses[1]);
     let userWind = userResponses[2].toLowerCase();
@@ -171,11 +185,11 @@
     appendMessage(bestCrane ? `🔹 Recommended Crane: ${bestCrane.name}` : "❌ No suitable crane found!", "bot");
 
     setTimeout(() => {
-        step = 0;
-        userResponses = [];
         appendMessage("Do you want to find another crane? (Yes/No)", "bot");
+        step = -1; // Set step to -1 so that when 'Yes' is entered, it starts from 0 again
     }, 2000);
 }
+
 
 
         function handleKeyPress(event) {
