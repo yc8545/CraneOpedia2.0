@@ -34,31 +34,94 @@
     </section>
 
     <!-- Crane Comparison -->
-    <section id="compare" class="container mx-auto py-20 px-4">
-        <h2 class="text-3xl font-bold text-center text-yellow-500">🔍 Compare Cranes</h2>
-        <div class="mt-6 bg-gray-100 p-6 rounded-lg shadow-md morph">
-            <h3 class="text-xl font-semibold mb-4 text-yellow-500">Filters</h3>
-            <div class="flex flex-col md:flex-row justify-center items-center gap-4">
-                <select id="typeSelect" class="p-2 px-10 border rounded bg-white text-yellow-500 mr-10">
-                    <option value="">Select Type</option>
-                    <option value="All-Terrain Crane">All-Terrain Crane</option>
-                    <option value="Crawler Crane">Crawler Crane</option>
-                    <option value="Engine Crane">Engine Crane</option>
-                    <option value="Mobile Crane">Mobile Crane</option>
-                    <option value="Tower Crane">Tower Crane</option>                    
-                </select>
-                <select id="manufacturerSelect" class="p-2 px-10 border rounded bg-white text-yellow-500 mr-10">
-                    <option value="">Select Model</option>
-                </select>
-                <select id="modelSelect" class="p-2 px-10 border rounded bg-white text-yellow-500 mr-10">
-                    <option value="">Select Model</option>
-                </select>
-            </div>
-            <div class="mt-6 text-center">
-                <button class="bg-yellow-500 text-white px-4 py-2 rounded font-bold hover:bg-yellow-400 transition">Compare</button>
-            </div>
+     <!-- Header -->
+    <header class="bg-yellow-500 text-white text-center py-4 text-xl font-bold">
+        Crane Comparison Dashboard
+    </header>
+
+    <!-- Container -->
+    <div class="max-w-4xl mx-auto mt-10 bg-white p-6 rounded-lg shadow-lg">
+
+        <!-- Title -->
+        <h2 class="text-2xl font-semibold text-gray-800 text-center mb-6">🔍 Compare Cranes</h2>
+
+        <!-- Filters -->
+        <div class="flex justify-center space-x-4 mb-6">
+            <select id="craneType" class="border border-gray-300 rounded px-4 py-2">
+                <option value="">Select Type</option>
+                <option value="Mobile Crane">Mobile Crane</option>
+                <option value="Tower Crane">Tower Crane</option>
+                <option value="Crawler Crane">Crawler Crane</option>
+            </select>
+
+            <select id="craneModel" class="border border-gray-300 rounded px-4 py-2">
+                <option value="">Select Model</option>
+            </select>
+
+            <button onclick="compareCrane()" class="bg-yellow-500 text-white px-6 py-2 rounded hover:bg-yellow-600">
+                Compare
+            </button>
         </div>
-    </section>
+
+        <!-- Comparison Result -->
+        <div id="resultBox" class="hidden bg-gray-50 border border-gray-300 p-4 rounded-lg"></div>
+
+    </div>
+
+    <script>
+        const craneData = {
+            "Mobile Crane": {
+                "Model A": { capacity: "50 tons", radius: "30m", height: "40m", terrain: "Hard" },
+                "Model B": { capacity: "60 tons", radius: "35m", height: "45m", terrain: "Soft" }
+            },
+            "Tower Crane": {
+                "Model X": { capacity: "100 tons", radius: "80m", height: "150m", terrain: "Hard" },
+                "Model Y": { capacity: "120 tons", radius: "85m", height: "160m", terrain: "Soft" }
+            },
+            "Crawler Crane": {
+                "Model M": { capacity: "200 tons", radius: "50m", height: "100m", terrain: "Uneven" },
+                "Model N": { capacity: "220 tons", radius: "55m", height: "110m", terrain: "Rough" }
+            }
+        };
+
+        document.getElementById("craneType").addEventListener("change", function () {
+            let type = this.value;
+            let modelSelect = document.getElementById("craneModel");
+            modelSelect.innerHTML = '<option value="">Select Model</option>';
+            if (type && craneData[type]) {
+                Object.keys(craneData[type]).forEach(model => {
+                    let option = document.createElement("option");
+                    option.value = model;
+                    option.textContent = model;
+                    modelSelect.appendChild(option);
+                });
+            }
+        });
+
+        function compareCrane() {
+            let type = document.getElementById("craneType").value;
+            let model = document.getElementById("craneModel").value;
+            let resultBox = document.getElementById("resultBox");
+
+            if (type && model && craneData[type] && craneData[type][model]) {
+                let data = craneData[type][model];
+                resultBox.innerHTML = `
+                    <h3 class="text-lg font-semibold text-gray-800">📊 Crane Comparison</h3>
+                    <p class="mt-2"><strong>Type:</strong> ${type}</p>
+                    <p><strong>Model:</strong> ${model}</p>
+                    <p><strong>Capacity:</strong> ${data.capacity}</p>
+                    <p><strong>Radius:</strong> ${data.radius}</p>
+                    <p><strong>Height:</strong> ${data.height}</p>
+                    <p><strong>Terrain:</strong> ${data.terrain}</p>
+                `;
+                resultBox.classList.remove("hidden");
+            } else {
+                resultBox.innerHTML = `<p class="text-red-500">❌ Please select a valid crane type and model.</p>`;
+                resultBox.classList.remove("hidden");
+            }
+        }
+    </script>
+
 
    <!-- Load Distribution Analysis -->
    <section id="load-analysis" class="bg-gray-100 py-5 px-4 morph">
